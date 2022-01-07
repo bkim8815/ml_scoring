@@ -16,14 +16,14 @@ with open('config.json','r') as f:
 
 dataset_csv_path = os.path.join(config['output_folder_path'])
 prod_deployment_path = os.path.join(config['prod_deployment_path'])
-
+model_path = os.path.join(config['output_model_path'])
 
 ####################function for deployment
 def store_model_into_pickle():
     #copy the latest pickle file, the latestscore.txt value, and the ingestfiles.txt file into the deployment directory
     shutil.copyfile( dataset_csv_path + '/ingestedfiles.txt' , prod_deployment_path + '/ingestedfiles.txt' )
-    shutil.copyfile( dataset_csv_path + '/latestscore.txt' , prod_deployment_path + '/latestscore.txt' )
-    shutil.copyfile( dataset_csv_path + '/trainedmodel.pkl' , prod_deployment_path + '/trainedmodel.pkl' )
+    shutil.copyfile( model_path + '/latestscore.txt' , prod_deployment_path + '/latestscore.txt' )
+    shutil.copyfile( model_path + '/trainedmodel.pkl' , prod_deployment_path + '/trainedmodel.pkl' )
 
 
 
