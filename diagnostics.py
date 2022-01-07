@@ -1,4 +1,4 @@
-
+import subprocess
 import pandas as pd
 import numpy as np
 import timeit
@@ -66,17 +66,24 @@ def execution_time():
     return training_timings
 
 ##################Function to check dependencies
-# def outdated_packages_list():
-    #get a list of
+def outdated_packages_list():
+    outdated = subprocess.check_output(['pip', 'list', '--outdated'])
+    with open('outdated.txt', 'wb') as f:
+        f.write(outdated)
 
 
 ##################Function to check na_percent
 def missing_data():
     df=pd.read_csv(output_folder_path+ '/'+'finaldata.csv')
-
+    nas = []
+    for col in df.columns:
+        na_pct=df[col].isna().sum() / len(df)
+        nas.append(na_pct)
+    return nas
 
 if __name__ == '__main__':
-    # model_predictions()
+    model_predictions()
     dataframe_summary()
-    # execution_time()
-    # outdated_packages_list()
+    missing_data()
+    execution_time()
+    outdated_packages_list()
