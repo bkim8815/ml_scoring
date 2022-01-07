@@ -24,13 +24,12 @@ def merge_multiple_dataframe():
 
     for directory in directories:
         filenames = os.listdir(os.getcwd()+"/"+directory)
-        print(filenames)
-        f = open("ingestedfiles.txt", "a")
-        f.write(str(filenames))
-        f.close()
+        f = open(f"{output_folder_path}/ingestedfiles.txt", "a")
 
         for each_filename in filenames:
             if each_filename.endswith('.csv'):
+                f.write(each_filename + "\n")
+
                 df1 = pd.read_csv(os.getcwd()+"/"+directory+"/"+each_filename)
                 df_list=df_list.append(df1)
 
