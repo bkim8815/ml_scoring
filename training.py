@@ -17,10 +17,10 @@ model_path = os.path.join(config['output_model_path'])
 
 
 #################Function for training the model
-def train_model():
+def train_model(file):
 
 
-    trainingdata=pd.read_csv(dataset_csv_path + '/' + 'finaldata.csv')
+    trainingdata=pd.read_csv(dataset_csv_path + '/' + file)
     X=trainingdata.loc[:,['lastmonth_activity','lastyear_activity', 'number_of_employees']].values.reshape(-1, 3)
     y=trainingdata['exited'].values.reshape(-1, 1).ravel()
     logit=LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,
@@ -36,4 +36,4 @@ def train_model():
 
 
 if __name__ == '__main__':
-    train_model()
+    train_model('finaldata.csv')

@@ -2,49 +2,63 @@ from flask import Flask, session, jsonify, request
 import pandas as pd
 import numpy as np
 import pickle
-import create_prediction_model
-import diagnosis 
-import predict_exited_from_saved_model
+# import create_prediction_model
+# import diagnosis
+# import predict_exited_from_saved_model
 import json
 import os
-
-
+import diagnostics
+import scoring
+import training
 
 ######################Set up variables for use in our script
 app = Flask(__name__)
 app.secret_key = '1652d576-484a-49fd-913a-6879acfa6ba4'
 
 with open('config.json','r') as f:
-    config = json.load(f) 
+    config = json.load(f)
 
-dataset_csv_path = os.path.join(config['output_folder_path']) 
+dataset_csv_path = os.path.join(config['output_folder_path'])
 
 prediction_model = None
 
 
 #######################Prediction Endpoint
 @app.route("/prediction", methods=['POST','OPTIONS'])
-def predict():        
+def predict():
     #call the prediction function you created in Step 3
-    return #add return value for prediction outputs
+    file = request.args.get('file')
+    training.train_model(file)
+    preds = diagnostics.model_predictions()
+
+    # print(preds)
+
+
+    return str(preds)
 
 #######################Scoring Endpoint
 @app.route("/scoring", methods=['GET','OPTIONS'])
-def stats():        
+def stats():
     #check the score of the deployed model
-    return #add return value (a single F1 score number)
+    score = scoring.score_model()
+    return str(score)
 
 #######################Summary Statistics Endpoint
 @app.route("/summarystats", methods=['GET','OPTIONS'])
-def stats():        
+def stats2():
     #check means, medians, and modes for each column
-    return #return a list of all calculated summary statistics
+    resp = diagnostics.dataframe_summary()
+    return str(resp)
 
 #######################Diagnostics Endpoint
 @app.route("/diagnostics", methods=['GET','OPTIONS'])
-def stats():        
+def stats3():
     #check timing and percent NA values
-    return #add return value for all diagnostics
+    resp = []
+    resp.append({"Timing": diagnostics.execution_time()})
+    resp.append({"NA Percent": diagnostics.missing_data()})
+    print(str(resp))
+    return str(resp)
 
-if __name__ == "__main__":    
+if __name__ == "__main__":
     app.run(host='0.0.0.0', port=8000, debug=True, threaded=True)

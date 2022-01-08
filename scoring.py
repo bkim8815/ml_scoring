@@ -43,6 +43,7 @@ def score_model():
     f = open(model_path + '/' + "latestscore.txt", "w")
     f.write(str(f1score))
     f.close()
+    return f1score
 
 
 
